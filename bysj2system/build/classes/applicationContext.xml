@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 命名空间 -->
+<beans 	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+	http://www.springframework.org/schema/mvc 
+	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/task 
+	http://www.springframework.org/schema/task/spring-task-4.0.xsd ">
+	<!--开启注解扫描  以com.unite开头的包下所有的类 -->
+	<context:component-scan base-package="test"></context:component-scan>
+	<!-- c3p0数据库 -->
+	 <bean id="comboPooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/localhost??useUnicode=true&amp;characterEncoding=utf-8"></property>
+		<property name="user" value="root"></property>
+		<property name="password" value="root"></property>
+		<!-- 初始时候取得连接 -->
+		<property name="initialPoolSize" value="3"></property>
+		<property name="maxPoolSize" value="10"></property>
+		<property name="maxStatements" value="100"></property>
+		<!-- 连接池耗尽，一个同时获取的连接数 -->
+		<property name="acquireIncrement" value="2"></property>
+	</bean> 
+<!-- mybatis连接数据库 配置sqlSessionFactory -->
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+<property name="dataSource" ref="comboPooledDataSource"></property>
+<property name="configLocation" value="classpath:mybatis.xml"></property>
+</bean>
+<!-- 自动扫描数据库 -->
+<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+<property name="basePackage" value="test.dao"></property>
+<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+</bean>
+<!-- 文件上传 -->
+<bean id="multipartResolver" 
+class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+<!-- 最大上传 -->
+	<property name="maxUploadSize" value="10240000"/>
+</bean>
+<!-- 配置事务管理器  -->
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+<property name="dataSource" ref="comboPooledDataSource"></property>
+</bean>
+	</beans>

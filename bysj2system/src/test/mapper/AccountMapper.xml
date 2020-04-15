@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="test.dao.AccountMapper" >
+  <resultMap id="BaseResultMap" type="test.entry.Account" >
+    <id column="accountID" property="accountid" jdbcType="VARCHAR" />
+    <result column="postcard" property="postcard" jdbcType="VARCHAR" />
+    <result column="realname" property="realname" jdbcType="VARCHAR" />
+    <result column="IDnumber" property="idnumber" jdbcType="VARCHAR" />
+    <result column="roleID" property="roleid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    accountID, postcard, realname, IDnumber, roleID
+  </sql>
+   <!-- 登录 -->
+  <select id="login" resultMap="BaseResultMap">
+  select
+  <include refid="Base_Column_List" />
+  from account
+  where accountID=#{accountid,jdbcType=VARCHAR} and postcard=#{postcard,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询所有 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+  select
+	<include refid="Base_Column_List" />
+ FROM account 
+  </select>
+  <!-- 注册 -->
+  <insert id="insert1" parameterType="test.entry.Account" >
+    insert into account (accountID, postcard, realname, IDnumber, roleID)
+    values  #{accountID,jdbcType=VARCHAR}, #{realname,jdbcType=VARCHAR}, 
+      #{postcard,jdbcType=VARCHAR}, #{IDnumber,jdbcType=VARCHAR}, #{roleID,jdbcType=Integer}
+      )
+  </insert>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from account
+    where accountID = #{accountid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from account
+    where accountID = #{accountid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="test.entry.Account" >
+    insert into account (accountID, postcard, realname, 
+      IDnumber, roleID)
+    values (#{accountid,jdbcType=VARCHAR}, #{postcard,jdbcType=VARCHAR}, #{realname,jdbcType=VARCHAR}, 
+      #{idnumber,jdbcType=VARCHAR}, #{roleid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="test.entry.Account" >
+    insert into account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="accountid != null" >
+        accountID,
+      </if>
+      <if test="postcard != null" >
+        postcard,
+      </if>
+      <if test="realname != null" >
+        realname,
+      </if>
+      <if test="idnumber != null" >
+        IDnumber,
+      </if>
+      <if test="roleid != null" >
+        roleID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="accountid != null" >
+        #{accountid,jdbcType=VARCHAR},
+      </if>
+      <if test="postcard != null" >
+        #{postcard,jdbcType=VARCHAR},
+      </if>
+      <if test="realname != null" >
+        #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="idnumber != null" >
+        #{idnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="roleid != null" >
+        #{roleid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="test.entry.Account" >
+    update account
+    <set >
+      <if test="postcard != null" >
+        postcard = #{postcard,jdbcType=VARCHAR},
+      </if>
+      <if test="realname != null" >
+        realname = #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="idnumber != null" >
+        IDnumber = #{idnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="roleid != null" >
+        roleID = #{roleid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where accountID = #{accountid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="test.entry.Account" >
+    update account
+    set postcard = #{postcard,jdbcType=VARCHAR},
+      realname = #{realname,jdbcType=VARCHAR},
+      IDnumber = #{idnumber,jdbcType=VARCHAR},
+      roleID = #{roleid,jdbcType=INTEGER}
+    where accountID = #{accountid,jdbcType=VARCHAR}
+  </update>
+</mapper>
